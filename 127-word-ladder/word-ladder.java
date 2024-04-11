@@ -3,18 +3,15 @@ class Solution {
         Set<String> set = new HashSet<>(wordList);
         if (!set.contains(endWord))
             return 0;
-
         Queue<String> q = new LinkedList<>();
         q.add(beginWord);
         int ans = 1;
-
         while (!q.isEmpty()) {
             int size = q.size();
             for (int i = 0; i < size; i++) {
-                String word = q.poll();
+                String word = q.remove();
                 if (word.equals(endWord))
                     return ans;
-
                 for (int j = 0; j < word.length(); j++) {
                     for (char k = 'a'; k <= 'z'; k++) {
                         char arr[] = word.toCharArray();
@@ -28,7 +25,6 @@ class Solution {
                 }
             }
             ans++;
-
         }
         return 0;
     }
