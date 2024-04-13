@@ -1,31 +1,25 @@
 class Solution {
-    public int[] maxSlidingWindow(int[] input, int k) {
-    ArrayDeque<Integer> deque=new ArrayDeque<>();
-      int[] ans=new int[input.length-k+1];
-      int start=0;
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n=nums.length;
+        int[] ans=new int[n-k+1];
+        int idx=0;
+        Deque<Integer> q=new ArrayDeque<>();
+        for(int i=0;i<n;i++){
+            //at first check peek element if <i-k as have to store max i-k
+            if(!q.isEmpty() && q.peekFirst()<=i-k)
+            q.removeFirst();
 
-      //itertaing input & expanding window to slide if shrinks
-      for(int end=0;end<input.length;end++){
-          //removing elements from first
-          while(!deque.isEmpty() && input[end]>deque.getLast()){
-              deque.removeLast();
-          }
+            //have to store in decreasing fashion so remove smaller elements than nums[i]
+            while(!q.isEmpty() && nums[i]>nums[q.peekLast()])
+            q.removeLast();
 
-          //adding endth ele
-          deque.addLast(input[end]);
+            //offereing current element index to q
+            q.add(i);
 
-          //if window size==k , add ele in ans & shrink window by 1
-          if(end-start+1==k){
-              //adding ans
-              ans[start]=deque.getFirst();
-             //removing front ele if not needed for next subarray
-             if(deque.getFirst()==input[start]){
-                 deque.removeFirst();
-             }
-             //shrink window
-             start++;
-          }
-      }  
-        return ans;    
+            //start storing ans if i>=k-1
+            if(i>=k-1)
+            ans[idx++]=nums[q.peek()];
+        }
+        return ans;
     }
 }
