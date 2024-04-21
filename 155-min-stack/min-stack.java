@@ -1,5 +1,5 @@
 class MinStack {
-    long minEle;
+    int minEle;
     Stack<Long> s;
 
     public MinStack() {
@@ -46,14 +46,13 @@ class MinStack {
     public int top() {
         long top = s.peek();
         if (top < minEle) {
-            return (int)minEle;
+            return minEle;
         }
-
         return (int) top;
     }
 
     public int getMin() {
-        return (int)minEle;
+        return minEle;
     }
 }
 
