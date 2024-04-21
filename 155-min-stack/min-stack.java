@@ -1,42 +1,59 @@
 class MinStack {
-    Long minEle;
+    long minEle;
     Stack<Long> s;
+
     public MinStack() {
-        s=new Stack<Long>();
+        s = new Stack<Long>();
     }
-    
+
     public void push(int val) {
-        if(s.isEmpty()){
-            s.push((long)val);
-            minEle=(long)val;
-        }else{
-            if(val<minEle){
-              s.push(2*(long)val-minEle);
-              minEle=(long)val;
-            }else{
-            s.push((long)val);
-            }
+
+        if (s.isEmpty()) {
+            s.push((long) val);
+            minEle = val;
+            return;
         }
+
+        if (val < minEle) {
+            // create Hash with prev minEle & current min ele that is going to be
+            // initialised & store it
+            // val<minELe so that val-minEle<0 => would be less than both
+            long hash = 2 * (long) val - minEle;
+            s.push(hash);
+            minEle = val;
+        } else {
+            // val>=s.peek()
+            s.push((long) val);
+        }
+
     }
-    
+
     public void pop() {
-        Long top=s.peek();
-        if(top<minEle){
-            minEle=2*minEle-top;
+        Long top = s.peek();
+
+        if (top < minEle) {
+            // this implies hash is created here with earlier minEle so decode it
+            long hash = top;
+            // finding last minEle using Hash & minEle
+            int prevMin = (int) (2 * minEle - hash);
+            // declaring earlier as current minEle removed
+            minEle = prevMin;
         }
-       s.pop();
+
+        s.pop();
     }
-    
+
     public int top() {
-          Long top=s.peek();
-        if(top<minEle){
-           return minEle.intValue();
+        long top = s.peek();
+        if (top < minEle) {
+            return (int)minEle;
         }
-        return s.peek().intValue();
+
+        return (int) top;
     }
-    
+
     public int getMin() {
-        return minEle.intValue();
+        return (int)minEle;
     }
 }
 
