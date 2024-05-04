@@ -1,55 +1,39 @@
 /**
  * Definition for singly-linked list.
  * public class ListNode {
- * int val;
- * ListNode next;
- * ListNode() {}
- * ListNode(int val) { this.val = val; }
- * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
 class Solution {
     public ListNode reverseBetween(ListNode head, int left, int right) {
-        if (head.next == null || left == right)
-            return head;
+      ListNode dummy=new ListNode(0);
+      dummy.next=head;
 
-        int count = 1;
-        ListNode l = null, r = null, prev = null, curr = head;
-        ListNode LNull = null;
+      ListNode leftPre=dummy;
+      ListNode currNode=head;
 
-        ListNode next = (curr.next != null) ? curr.next : null;
+      for(int i=0;i<left-1;i++){
+        leftPre=leftPre.next;
+        currNode=currNode.next;
+      }  
 
-        while (curr != null && count <= right) {
-            if (count == left) {
-                l = prev;
-                if (l == null) {
-                    LNull = curr;
-                }
-            }
+      ListNode subListHead=currNode;
 
-            if (count == right) {
-                r = next;
-            }
+      ListNode preNode=null;
+      for(int i=0;i<=right-left;i++){
+        ListNode nextNode=currNode.next;
+        currNode.next=preNode;
+        preNode=currNode;
+        currNode=nextNode;
+      }
 
-            if (count >= left && count <= right) {
-                // reverse link
-                curr.next = prev;
-            }
-            // Slide Pointer
-            prev = curr;
-            curr = next;
-            next = next != null ? next.next : null;
+      leftPre.next=preNode;
+      subListHead.next=currNode;
 
-            count++;
-        }
-        if (l == null ) {
-            if (r!= null)
-                LNull.next = r;
-            head = prev;
-        } else {
-            l.next.next = r;
-            l.next = prev;
-        }
-        return head;
+      return dummy.next;
     }
 }
