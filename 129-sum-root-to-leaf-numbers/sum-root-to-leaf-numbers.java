@@ -14,25 +14,21 @@
  * }
  */
 class Solution {
-    int sum=0;
-    int final_sum=0;
+    int ans;
     public int sumNumbers(TreeNode root) {
-        int n=root.val;
-        sum=sum*10+n;
-        if(root.left!=null)
-        {
-        sumNumbers(root.left);
-            sum=sum/10;
-        }
-        if(root.right!=null)
-        {
-            sumNumbers(root.right);
-           sum=sum/10;
-        }
-          if(root.left==null && root.right==null)
-            final_sum+=sum;
-          
-      
-        return final_sum;
+        ans=0;
+        helper(root,0);
+        return ans;
     }
+  public void helper(TreeNode root,int numSoFar){
+    if(root==null)
+    return ;
+    int newNumber=numSoFar*10+root.val;
+    if(root.left==null && root.right==null){
+        ans+=newNumber;
+        return;
+    }
+    helper(root.left,newNumber);
+    helper(root.right,newNumber);
+  }
 }
