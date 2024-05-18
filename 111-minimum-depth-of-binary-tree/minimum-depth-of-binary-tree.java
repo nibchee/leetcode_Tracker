@@ -14,25 +14,30 @@
  * }
  */
 class Solution {
-    int minD=Integer.MAX_VALUE;
     public int minDepth(TreeNode root) {
         if(root==null)
         return 0;
-        helper(root,0);
-        return minD;
-    }
 
-    public void helper(TreeNode root,int level){
-         if(root==null)
-         return;
-         if(root.left==null && root.right==null)
-         minD=Math.min(minD,level+1);
+        int depth=1;
+        Queue<TreeNode> q=new LinkedList<TreeNode>();
+        q.offer(root);
 
-         if(root.left!=null)
-         helper(root.left,level+1);
+        while(!q.isEmpty()){
+            int size=q.size();
+            for(int i=0;i<size;i++){
+                TreeNode node=q.poll();
 
-         if(root.right!=null)
-         helper(root.right,level+1);
+                if(node.left==null && node.right==null)
+                return depth;
 
+                if(node.left!=null)
+                q.offer(node.left);
+
+                if(node.right!=null)
+                q.offer(node.right);
+            }
+            depth++;
+        }
+        return depth;
     }
 }
