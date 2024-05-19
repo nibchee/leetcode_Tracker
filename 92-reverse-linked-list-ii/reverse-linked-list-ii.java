@@ -10,30 +10,58 @@
  */
 class Solution {
     public ListNode reverseBetween(ListNode head, int left, int right) {
-      ListNode dummy=new ListNode(0);
-      dummy.next=head;
+      if(head==null)
+      return null;
 
-      ListNode leftPre=dummy;
-      ListNode currNode=head;
+      if(head.next==null || left==right)
+      return head;
 
-      for(int i=0;i<left-1;i++){
-        leftPre=leftPre.next;
-        currNode=currNode.next;
-      }  
+      ListNode leftPos=null,rightPos=null;
 
-      ListNode subListHead=currNode;
-
-      ListNode preNode=null;
-      for(int i=0;i<=right-left;i++){
-        ListNode nextNode=currNode.next;
-        currNode.next=preNode;
-        preNode=currNode;
-        currNode=nextNode;
+      ListNode curr=head;
+      int count=1;
+      
+      while(curr!=null && count<=right){
+        if(count==left-1){
+          leftPos=curr;
+        }
+        if(count==right){
+            rightPos=curr;
+        }
+        curr=curr.next;
+        count++;
       }
+      ListNode rightPos2=rightPos;
+      rightPos=rightPos.next;
+      rightPos2.next=null;
+      ListNode [] headTail=null;
+      if(left==1)
+     headTail=reverseLL(head);
+     else
+     headTail=reverseLL(leftPos.next);
 
-      leftPre.next=preNode;
-      subListHead.next=currNode;
+      if(left==1)
+      head=headTail[0];
+      else
+      leftPos.next=headTail[0];
+      headTail[1].next=rightPos;
+      
+   
+      return head;  
+    }
 
-      return dummy.next;
+    private ListNode[] reverseLL(ListNode head){
+        ListNode[] headTail=new ListNode[2];
+        headTail[1]=head;
+        ListNode curr=head,prev=null,next=null;
+
+        while(curr!=null){
+            next=curr.next;
+            curr.next=prev;
+            prev=curr;
+            curr=next;
+        }
+       headTail[0]=prev;
+       return headTail;
     }
 }
