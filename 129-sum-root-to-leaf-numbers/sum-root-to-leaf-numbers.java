@@ -14,21 +14,22 @@
  * }
  */
 class Solution {
-    int ans;
+    int sum=0;
+    private void sumOfPaths(TreeNode root, int nsf){
+        nsf=nsf*10+root.val;
+        if(root.left==null && root.right==null)
+        sum+=nsf;
+
+        if(root.left!=null)
+        sumOfPaths(root.left,nsf);
+
+        if(root.right!=null)
+        sumOfPaths(root.right,nsf);
+        
+    }
     public int sumNumbers(TreeNode root) {
-        ans=0;
-        helper(root,0);
-        return ans;
+        if(root==null) return 0;
+        sumOfPaths(root,0);
+        return sum;
     }
-  public void helper(TreeNode root,int numSoFar){
-    if(root==null)
-    return ;
-    int newNumber=numSoFar*10+root.val;
-    if(root.left==null && root.right==null){
-        ans+=newNumber;
-        return;
-    }
-    helper(root.left,newNumber);
-    helper(root.right,newNumber);
-  }
 }
