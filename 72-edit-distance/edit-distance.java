@@ -26,8 +26,10 @@ class Solution {
     public int minDistance(String word1, String word2) {
         int m = word1.length();
         int n = word2.length();
-        if(m==0) return n;
-        if(n==0) return m;
+        // if (m == 0)
+        //     return n;
+        // if (n == 0)
+        //     return m;
 
         // dp = new int[m][n];
         // for (int[] arr : dp)
@@ -37,12 +39,12 @@ class Solution {
         // Applying Tabulation & f(0,0) ,f(0,1) => Shifting
         dp = new int[m + 1][n + 1];
         dp[0][0] = 0;
-        for (int i = 1; i <=m; i++) {
+        for (int i = 1; i <= m; i++) {
             dp[i][0] = 1 + dp[i - 1][0];
         }
 
-        for(int i=1;i<=n;i++)
-         dp[0][i] = 1 + dp[0][i - 1];
+        for (int i = 1; i <= n; i++)
+            dp[0][i] = 1 + dp[0][i - 1];
 
         for (int i = 1; i <= m; i++) {
             for (int j = 1; j <= n; j++) {
