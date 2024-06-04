@@ -15,7 +15,18 @@ class Solution {
     }
 
     public int maxSumAfterPartitioning(int[] arr, int k) {
-       dp=new int[arr.length];
-        return helper(0, arr, k);
+       dp=new int[arr.length+1];
+       for(int i=arr.length-1;i>=0;i--){
+        int maxEle = arr[i];
+        int maxVal = 0;
+        for (int j = i; j < i + k && j < arr.length; j++) {
+            maxEle = Math.max(maxEle, arr[j]);
+            int rest = dp[j + 1];
+            maxVal = Math.max(maxVal, maxEle * (j - i + 1) + rest);
+        }
+         dp[i]=maxVal;
+       }
+        //return helper(0, arr, k);
+        return dp[0];
     }
 }
