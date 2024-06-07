@@ -10,14 +10,18 @@ class Solution {
     // }
      public int rob(int[] nums) {
         int n=nums.length;
-        dp=new int[n];
-        dp[0]=nums[0];
+        if(n==1) return nums[0];
+         int prev1=nums[0];
+         int prev2=0,curr=0;
         for(int i=1;i<n;i++){
-        int cost1=dp[i-1];
-        int cost2=(i-2)>=0?dp[i-2]+nums[i]:nums[i];   
-        dp[i]=Math.max(cost1,cost2); 
+        int cost1=prev1;
+        int cost2=prev2+nums[i];   
+        curr=Math.max(cost1,cost2);
+        prev2=prev1;
+        prev1=curr; 
         }
         //return helper(n-1,nums);
-        return dp[n-1];
+       // return dp[n-1];
+       return curr;
     }
 }
