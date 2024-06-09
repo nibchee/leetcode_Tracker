@@ -1,25 +1,19 @@
 class Solution {
-    int dp[][];
-    //as prev_idx can be -1 so storing +1
-    private int helper(int nums[],int idx,int prev_idx){
-      //Base cases
-      if(idx==nums.length) return 0;
-      if(dp[idx+1][prev_idx+1]!=-1) return dp[idx+1][prev_idx+1];
-        //not take
-        int notTakeLength=helper(nums,idx+1,prev_idx);
-        int takeLength=0;
-        //take when cur is greater than prev || prev_idx is -1
-        if(prev_idx==-1 || nums[idx]>nums[prev_idx]){
-            takeLength=1+helper(nums,idx+1,idx);
-        }
-        return dp[idx+1][prev_idx+1]=Math.max(notTakeLength,takeLength);
-    }
     public int lengthOfLIS(int[] nums) {
-         int n=nums.length;
-        
-        dp=new int[n+1][n+1];
-        for(int[] arr:dp)
-        Arrays.fill(arr,-1); 
-        return helper(nums,0,-1);
+        int n = nums.length;
+        int ans = 1;
+        int dp[] = new int[n];
+        Arrays.fill(dp, 1);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    if (dp[i] < dp[j] + 1) {
+                        dp[i] = dp[j] + 1;
+                    }
+                }
+            }
+            ans = Math.max(ans, dp[i]);
+        }
+        return ans;
     }
 }
