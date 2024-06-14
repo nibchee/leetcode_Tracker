@@ -1,28 +1,45 @@
 class Solution {
-    public List<List<Integer>> permuteUnique(int[] nums) {
-        Arrays.sort(nums);
-         List<List<Integer>> ans=new ArrayList<>();
-       ArrayList<Integer> indices=new ArrayList<>();
-        permute(nums,indices,ans);
-        return ans;
-    }
-    
-     private void permute(int[] nums,ArrayList<Integer> indices,List<List<Integer>> ans){
+    private List<List<Integer>> result = new ArrayList<>();
+    private int n;
 
-       if(indices.size()==nums.length){
-        ArrayList<Integer> list=new ArrayList<>();
-        for(Integer i:indices){
-          list.add(nums[i]);
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        n = nums.length;
+
+        solve(0, nums);
+
+        return result;
+    }
+
+    private void solve(int idx, int[] nums) {
+        if (idx == n) {
+            List<Integer> permutation = new ArrayList<>();
+            for (int num : nums) {
+                permutation.add(num);
+            }
+            result.add(permutation);
+            return;
         }
-        if(!ans.contains(list))
-        ans.add(list);
-       }
-        for(int i=0;i<nums.length;i++){
-            if(indices.contains(i))
-            continue;
-            indices.add(i);
-            permute(nums,indices,ans);
-            indices.remove(indices.size()-1);
+
+        Set<Integer> uniqueSet = new HashSet<>();
+        for (int i = idx; i < n; i++) {
+
+            if (uniqueSet.contains(nums[i])) {
+                continue;
+            }
+
+            uniqueSet.add(nums[i]);
+
+            swap(nums, i, idx);
+
+            solve(idx + 1, nums);
+
+            swap(nums, i, idx);
         }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
     }
 }
