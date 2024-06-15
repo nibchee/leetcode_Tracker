@@ -1,20 +1,22 @@
 class Solution {
+    List<List<Integer>> ans;
     public List<List<Integer>> subsets(int[] nums) {
-        List<List<Integer>> subsets=new ArrayList<>();
+         ans=new ArrayList<>();
+         helper(nums,0,new ArrayList<Integer>());
+         return ans;
+    }
 
-        for(int i=0;i<Math.pow(2,nums.length);i++){
-            int number=i;
-            ArrayList<Integer> set=new ArrayList<>();
-            int k=0;
-            while(number!=0){
-                if((number&1)==1){
-                set.add(nums[k]);
-                }
-                number=number>>1;
-                k++;
-            }
-          subsets.add(set);
-        }
-    return subsets;
+    private void helper(int[] nums,int idx,ArrayList<Integer> ds){
+      if(idx==nums.length){
+        ans.add(new ArrayList<>(ds));
+        return;
+      }
+      //take
+      ds.add(nums[idx]);
+      helper(nums,idx+1,ds);
+      ds.remove(ds.size()-1);
+
+      //not Take
+      helper(nums,idx+1,ds);
     }
 }
