@@ -21,24 +21,7 @@ class Solution {
             }
         }
 
-        // now we have got the distance
-        // now cal force
-        // System.out.println(ans);
-        // return force(position,ans);
         return ans;
-    }
-
-    private int force(int[] position, int dist) {
-        int force = Integer.MAX_VALUE;
-        int last_placed = position[0];
-
-        for (int i = 1; i < position.length; i++) {
-            if (position[i] - last_placed >= dist) {
-                force = Math.min(position[i] - last_placed, force);
-                last_placed = position[i];
-            }
-        }
-        return force;
     }
 
     private boolean is_possible(int[] position, int m, int dist) {
