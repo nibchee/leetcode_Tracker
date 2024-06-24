@@ -17,7 +17,7 @@ class Solution {
       } else {
         totalFlipCount[i] = totalFlipCount[i - 1];
       }
-      System.out.print(totalFlipCount[i] + " ");
+     // System.out.print(totalFlipCount[i] + " ");
     }
 
     // Now from n-k+1 to n , have to check , is it all 1's possible
