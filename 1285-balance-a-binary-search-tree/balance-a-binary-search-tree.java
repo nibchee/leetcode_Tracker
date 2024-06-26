@@ -17,22 +17,23 @@ class Solution {
     ArrayList<Integer> l;
 
     public TreeNode balanceBST(TreeNode root) {
-        l=new ArrayList<>();
+        l = new ArrayList<>();
         inorder(root);
-        int arr[]=new int[l.size()];
-        int i=0;
-        for(Integer integer:l)
-        arr[i++]=integer;
+        int arr[] = new int[l.size()];
+        int i = 0;
+        for (Integer integer : l)
+            arr[i++] = integer;
         return sortedArrayToBST(arr);
     }
 
-    public void inorder(TreeNode root){
-        if(root==null) return;
-        if(root.left!=null)
-        inorder(root.left);
+    public void inorder(TreeNode root) {
+        if (root == null)
+            return;
+        if (root.left != null)
+            inorder(root.left);
         l.add(root.val);
-        if(root.right!=null)
-        inorder(root.right);
+        if (root.right != null)
+            inorder(root.right);
     }
 
     public TreeNode sortedArrayToBST(int[] nums) {
