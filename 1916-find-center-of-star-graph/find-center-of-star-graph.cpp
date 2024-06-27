@@ -14,7 +14,7 @@ public:
         for(int i=1;i<=n;i++){
             int c=0;
             
-            if(adj[i].size()==n-2){
+            if(adj[i].size()==maxi-1){
                 return i;
             }
         }
