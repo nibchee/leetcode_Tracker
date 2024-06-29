@@ -1,12 +1,18 @@
 class Solution {
 public:
 //    map<int,vector<int>>dp(1001);
+vector<set<int>> dp;
     void findp(map<int,vector<int>>m,int i,set<int>&s){
+      if(!dp[i].empty()){
+        s.insert(dp[i].begin(),dp[i].end());
+        return;
+      }
         for(auto j:m[i]){
             if(s.insert(j).second){
             findp(m,j,s);
             }
         }
+        dp[i]=s;
         //return ;
     }
 
@@ -23,7 +29,7 @@ public:
 
     vector<vector<int>> getAncestors(int n, vector<vector<int>>& edges) {
         //vector<set<int>>ans;
-        //map<int,vector<int>>m;
+        //map<int,vector<int>>m(n);
         vector<vector<int>>v(n);
         //adjacency list
         for(int i=0;i<edges.size();i++){
