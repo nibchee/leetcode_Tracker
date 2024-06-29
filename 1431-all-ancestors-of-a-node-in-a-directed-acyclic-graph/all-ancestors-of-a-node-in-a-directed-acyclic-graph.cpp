@@ -1,14 +1,16 @@
 class Solution {
 public:
-    void findAncestors(vector<vector<int>>& adjList, int node, set<int>& ancestors) {
-        for (auto parent : adjList[node]) {
-            if (ancestors.insert(parent).second) {  // Only recurse if parent is newly inserted
-                findAncestors(adjList, parent, ancestors);
+//    map<int,vector<int>>dp(1001);
+    void findp(map<int,vector<int>>m,int i,set<int>&s){
+        for(auto j:m[i]){
+            if(s.insert(j).second){
+            findp(m,j,s);
             }
         }
+        //return ;
     }
 
-     void findp(vector<vector<int>>&m,int i,set<int>&s){
+      void findp(vector<vector<int>>&m,int i,set<int>&s){
         // if(m[i].size()==0){
         //     return ;
         // }
@@ -20,18 +22,32 @@ public:
     }
 
     vector<vector<int>> getAncestors(int n, vector<vector<int>>& edges) {
-        vector<vector<int>> adjList(n);
-        for ( auto& edge : edges) {
-            adjList[edge[1]].push_back(edge[0]);
+        //vector<set<int>>ans;
+        //map<int,vector<int>>m;
+        vector<vector<int>>v(n);
+        //adjacency list
+        for(int i=0;i<edges.size();i++){
+           // m[edges[i][1]].push_back(edges[i][0]);
+            v[edges[i][1]].push_back(edges[i][0]);
         }
-
-        vector<vector<int>> result(n);
-        for (int i = 0; i < n; ++i) {
-            set<int> ancestors;
-            findp(adjList, i, ancestors);
-            result[i] = vector<int>(ancestors.begin(), ancestors.end());
+        //finding parent
+        vector<vector<int>> req(n);
+        for(int i=0;i<n;i++){
+            set<int>s;
+            //findp(m,i,s);
+            findp(v,i,s);
+            //ans.push_back(s);
+             req[i]=vector<int>(s.begin(), s.end());
         }
-
-        return result;
+        //converting into required data type for returning answer
+        // vector<vector<int>> req;
+        // for(int i=0;i<ans.size();i++){
+        //     vector<int>v;
+        //     for(auto j:ans[i]){
+        //         v.push_back(j);
+        //     }
+        //     req.push_back(v);
+        // }
+        return req;
     }
 };
