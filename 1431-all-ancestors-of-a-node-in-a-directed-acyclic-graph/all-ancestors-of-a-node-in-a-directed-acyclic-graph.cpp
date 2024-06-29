@@ -26,6 +26,7 @@ public:
         vector<vector<int>> ans(n);
 
         for (int i = 0; i < n; i++) {
+          if(v[i].size()==0) continue;
             set<int> s = findp(v, i, dp);
             ans[i] = vector<int>(s.begin(), s.end());
         }
