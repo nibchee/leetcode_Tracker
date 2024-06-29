@@ -1,6 +1,6 @@
 class Solution {
 public:
-    void findAncestors(map<int, vector<int>>& adjList, int node, set<int>& ancestors) {
+    void findAncestors(vector<vector<int>>& adjList, int node, set<int>& ancestors) {
         for (auto parent : adjList[node]) {
             if (ancestors.insert(parent).second) {  // Only recurse if parent is newly inserted
                 findAncestors(adjList, parent, ancestors);
@@ -9,8 +9,8 @@ public:
     }
 
     vector<vector<int>> getAncestors(int n, vector<vector<int>>& edges) {
-        map<int, vector<int>> adjList;
-        for (const auto& edge : edges) {
+        vector<vector<int>> adjList(n);
+        for ( auto& edge : edges) {
             adjList[edge[1]].push_back(edge[0]);
         }
 
