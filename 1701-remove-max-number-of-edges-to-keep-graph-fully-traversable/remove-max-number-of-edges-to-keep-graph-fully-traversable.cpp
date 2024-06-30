@@ -1,5 +1,6 @@
 class DisjointSet {
     vector<int> rank, parent, size;
+
 public:
     DisjointSet(int n) {
         rank.resize(n + 1, 0);
@@ -20,14 +21,13 @@ public:
     void unionByRank(int u, int v) {
         int ulp_u = findUPar(u);
         int ulp_v = findUPar(v);
-        if (ulp_u == ulp_v) return;
+        if (ulp_u == ulp_v)
+            return;
         if (rank[ulp_u] < rank[ulp_v]) {
             parent[ulp_u] = ulp_v;
-        }
-        else if (rank[ulp_v] < rank[ulp_u]) {
+        } else if (rank[ulp_v] < rank[ulp_u]) {
             parent[ulp_v] = ulp_u;
-        }
-        else {
+        } else {
             parent[ulp_v] = ulp_u;
             rank[ulp_u]++;
         }
@@ -36,12 +36,12 @@ public:
     void unionBySize(int u, int v) {
         int ulp_u = findUPar(u);
         int ulp_v = findUPar(v);
-        if (ulp_u == ulp_v) return;
+        if (ulp_u == ulp_v)
+            return;
         if (size[ulp_u] < size[ulp_v]) {
             parent[ulp_u] = ulp_v;
             size[ulp_v] += size[ulp_u];
-        }
-        else {
+        } else {
             parent[ulp_v] = ulp_u;
             size[ulp_u] += size[ulp_v];
         }
@@ -51,49 +51,53 @@ public:
 class Solution {
 public:
     int maxNumEdgesToRemove(int n, vector<vector<int>>& edges) {
-         DisjointSet dsAlice(n), dsBob(n);
-        int totalEdges = 0;
+        DisjointSet aliceSet(n), bobSet(n);
+        int numberOfedgesUsedToFormSpanningTree = 0;
 
-        // Add type 3 edges first.
-        for (const auto& edge : edges) {
+        // Add 3 type in Both as minimal Requirement
+        for (auto& edge : edges) {
             if (edge[0] == 3) {
-                bool addedToAlice = dsAlice.findUPar(edge[1]) != dsAlice.findUPar(edge[2]);
-                bool addedToBob = dsBob.findUPar(edge[1]) != dsBob.findUPar(edge[2]);
-                if (addedToAlice) dsAlice.unionBySize(edge[1], edge[2]);
-                if (addedToBob) dsBob.unionBySize(edge[1], edge[2]);
-                if (addedToAlice || addedToBob) totalEdges++;
+                if (aliceSet.findUPar(edge[1]) != aliceSet.findUPar(edge[2])) {
+                    aliceSet.unionByRank(edge[1], edge[2]);
+                    bobSet.unionByRank(edge[1], edge[2]);
+                    numberOfedgesUsedToFormSpanningTree++;
+                }
             }
         }
-
-        // Add type 1 edges for Alice.
-        for (const auto& edge : edges) {
+       
+       //Add 1 type for Alice
+        for (auto& edge : edges) {
             if (edge[0] == 1) {
-                if (dsAlice.findUPar(edge[1]) != dsAlice.findUPar(edge[2])) {
-                    dsAlice.unionBySize(edge[1], edge[2]);
-                    totalEdges++;
+                if (aliceSet.findUPar(edge[1]) != aliceSet.findUPar(edge[2])) {
+                    aliceSet.unionByRank(edge[1], edge[2]);
+                    numberOfedgesUsedToFormSpanningTree++;
                 }
             }
         }
 
-        // Add type 2 edges for Bob.
-        for (const auto& edge : edges) {
+       //Add 2 type for Bob
+        for (auto& edge : edges) {
             if (edge[0] == 2) {
-                if (dsBob.findUPar(edge[1]) != dsBob.findUPar(edge[2])) {
-                    dsBob.unionBySize(edge[1], edge[2]);
-                    totalEdges++;
+                if (bobSet.findUPar(edge[1]) != bobSet.findUPar(edge[2])) {
+                    bobSet.unionByRank(edge[1], edge[2]);
+                    numberOfedgesUsedToFormSpanningTree++;
                 }
             }
         }
-
-        // Check if both Alice and Bob can traverse the entire graph.
-        int aliceComponents = 0, bobComponents = 0;
-        for (int i = 1; i <= n; ++i) {
-            if (dsAlice.findUPar(i) == i) aliceComponents++;
-            if (dsBob.findUPar(i) == i) bobComponents++;
+        //Now how can we find if union done or not if parent is same 
+        //counting Alice elements whch are not in Set
+         int numberOfAliceDisjointSets=0,numberOfBobDisjointSets=0;
+        for(int i=1;i<=n;i++){
+          if(aliceSet.findUPar(i)==i){
+           numberOfAliceDisjointSets++;
+          }
+          if(bobSet.findUPar(i)==i){
+            numberOfBobDisjointSets++;
+          }
+          if(numberOfAliceDisjointSets>1 || numberOfBobDisjointSets>1)
+          return -1;
         }
-
-        if (aliceComponents > 1 || bobComponents > 1) return -1;
-        return edges.size() - totalEdges;
+            
+        return edges.size() - numberOfedgesUsedToFormSpanningTree;
     }
-    
 };
