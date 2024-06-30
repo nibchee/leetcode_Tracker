@@ -51,16 +51,16 @@ public:
 class Solution {
 public:
     int maxNumEdgesToRemove(int n, vector<vector<int>>& edges) {
-        DisjointSet aliceSet(n), bobSet(n);
-        int numberOfedgesUsedToFormSpanningTree = 0;
+        DisjointSet aliceRoadsSet(n), bobRoadsSet(n);
+        int numberOfedgesUsedToFormFinalSpanningTree = 0;
 
         // Add 3 type in Both as minimal Requirement
         for (auto& edge : edges) {
             if (edge[0] == 3) {
-                if (aliceSet.findUPar(edge[1]) != aliceSet.findUPar(edge[2])) {
-                    aliceSet.unionByRank(edge[1], edge[2]);
-                    bobSet.unionByRank(edge[1], edge[2]);
-                    numberOfedgesUsedToFormSpanningTree++;
+                if (aliceRoadsSet.findUPar(edge[1]) != aliceRoadsSet.findUPar(edge[2])) {
+                    aliceRoadsSet.unionByRank(edge[1], edge[2]);
+                    bobRoadsSet.unionByRank(edge[1], edge[2]);
+                    numberOfedgesUsedToFormFinalSpanningTree++;
                 }
             }
         }
@@ -68,9 +68,9 @@ public:
        //Add 1 type for Alice
         for (auto& edge : edges) {
             if (edge[0] == 1) {
-                if (aliceSet.findUPar(edge[1]) != aliceSet.findUPar(edge[2])) {
-                    aliceSet.unionByRank(edge[1], edge[2]);
-                    numberOfedgesUsedToFormSpanningTree++;
+                if (aliceRoadsSet.findUPar(edge[1]) != aliceRoadsSet.findUPar(edge[2])) {
+                    aliceRoadsSet.unionByRank(edge[1], edge[2]);
+                    numberOfedgesUsedToFormFinalSpanningTree++;
                 }
             }
         }
@@ -78,9 +78,9 @@ public:
        //Add 2 type for Bob
         for (auto& edge : edges) {
             if (edge[0] == 2) {
-                if (bobSet.findUPar(edge[1]) != bobSet.findUPar(edge[2])) {
-                    bobSet.unionByRank(edge[1], edge[2]);
-                    numberOfedgesUsedToFormSpanningTree++;
+                if (bobRoadsSet.findUPar(edge[1]) != bobRoadsSet.findUPar(edge[2])) {
+                    bobRoadsSet.unionByRank(edge[1], edge[2]);
+                    numberOfedgesUsedToFormFinalSpanningTree++;
                 }
             }
         }
@@ -88,16 +88,16 @@ public:
         //counting Alice elements whch are not in Set
          int numberOfAliceDisjointSets=0,numberOfBobDisjointSets=0;
         for(int i=1;i<=n;i++){
-          if(aliceSet.findUPar(i)==i){
+          if(aliceRoadsSet.findUPar(i)==i){
            numberOfAliceDisjointSets++;
           }
-          if(bobSet.findUPar(i)==i){
+          if(bobRoadsSet.findUPar(i)==i){
             numberOfBobDisjointSets++;
           }
           if(numberOfAliceDisjointSets>1 || numberOfBobDisjointSets>1)
           return -1;
         }
             
-        return edges.size() - numberOfedgesUsedToFormSpanningTree;
+        return edges.size() - numberOfedgesUsedToFormFinalSpanningTree;
     }
 };
