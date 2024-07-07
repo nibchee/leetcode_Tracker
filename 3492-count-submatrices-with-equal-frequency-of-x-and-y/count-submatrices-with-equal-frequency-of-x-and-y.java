@@ -1,38 +1,65 @@
 class Solution {
   public int numberOfSubmatrices(char[][] grid) {
     int m = grid.length;
-        int n = grid[0].length;
+    int n = grid[0].length;
 
-        // Initialize prefix sums
-        int[][] prefixX = new int[m + 1][n + 1];
-        int[][] prefixY = new int[m + 1][n + 1];
+    int countX_till_ij[][] = new int[m][n];
+    int countY_till_ij[][] = new int[m][n];
 
-        // Fill prefix sums
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                prefixX[i + 1][j + 1] = prefixX[i + 1][j] + prefixX[i][j + 1] - prefixX[i][j] + (grid[i][j] == 'X' ? 1 : 0);
-                prefixY[i + 1][j + 1] = prefixY[i + 1][j] + prefixY[i][j + 1] - prefixY[i][j] + (grid[i][j] == 'Y' ? 1 : 0);
-            }
+    if (grid[0][0] == 'X')
+      countX_till_ij[0][0] = 1;
+
+    if (grid[0][0] == 'Y')
+      countY_till_ij[0][0] = 1;
+
+    // fill first Row
+    for (int j = 1; j < n; j++) {
+      countX_till_ij[0][j] = countX_till_ij[0][j - 1];
+      if (grid[0][j] == 'X')
+        countX_till_ij[0][j] += 1;
+
+      countY_till_ij[0][j] = countY_till_ij[0][j - 1];
+      if (grid[0][j] == 'Y')
+        countY_till_ij[0][j] += 1;
+    }
+
+    // first column
+    for (int i = 1; i < m; i++) {
+      countX_till_ij[i][0] = countX_till_ij[i - 1][0];
+      if (grid[i][0] == 'X')
+        countX_till_ij[i][0] += 1;
+
+      countY_till_ij[i][0] = countY_till_ij[i - 1][0];
+      if (grid[i][0] == 'Y')
+        countY_till_ij[i][0] += 1;
+    }
+
+    // now filling rest
+    for (int i = 1; i < m; i++) {
+      for (int j = 1; j < n; j++) {
+        countX_till_ij[i][j] = countX_till_ij[i][j - 1] + countX_till_ij[i - 1][j] - countX_till_ij[i - 1][j - 1];
+        if (grid[i][j] == 'X')
+          countX_till_ij[i][j] += 1;
+
+        countY_till_ij[i][j] = countY_till_ij[i][j - 1] + countY_till_ij[i - 1][j] - countY_till_ij[i - 1][j - 1];
+        if (grid[i][j] == 'Y')
+          countY_till_ij[i][j] += 1;
+
+      }
+    }
+
+    // Finding ans
+    int ans = 0;
+    for (int i = 0; i < m; i++) {
+      for (int j = 0; j < n; j++) {
+        if (countX_till_ij[i][j] > 0) {
+          if (countX_till_ij[i][j] == countY_till_ij[i][j])
+            ans++;
         }
-
-        int count = 0;
-
-        // Iterate over all possible bottom-right corners of submatrices starting from (0,0)
-        for (int r2 = 0; r2 < m; r2++) {
-            for (int c2 = 0; c2 < n; c2++) {
-                if (r2 == 0 && c2 == 0) continue; // Skip the case where the submatrix is just the top-left cell
-
-                // Calculate the number of 'X' and 'Y' in the submatrix (0,0) to (r2,c2)
-                int xCount = prefixX[r2 + 1][c2 + 1];
-                int yCount = prefixY[r2 + 1][c2 + 1];
-
-                // Check if the submatrix has an equal number of 'X' and 'Y' and contains at least one 'X'
-                if (xCount == yCount && xCount > 0) {
-                    count++;
-                }
-            }
-        }
-
-        return count;
+    //     System.out.print(countX_till_ij[i][j]+""+countY_till_ij[i][j]+" ");
+      }
+    //   System.out.println();
+    }
+    return ans;
   }
 }
