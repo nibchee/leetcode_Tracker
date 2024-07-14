@@ -1,58 +1,73 @@
 class Solution {
 public:
+    bool isDigit(char a) {
+        return a >= '0' && a <= '9';
+    }
+
+    bool isLetter(char a) {
+        return (a >= 'A' && a <= 'Z') || (a >= 'a' && a <= 'z');
+    }
+
     string countOfAtoms(string formula) {
-           stack<map<string, int>> stack;
-        stack.push(map<string, int>());
-        int n = formula.length();
+        map<string, int> atomCount;
+        stack<pair<string, int>> st;
+        int n = formula.size();
         int i = 0;
 
         while (i < n) {
-            char c = formula[i];
-            if (c == '(') {
-                stack.push(map<string, int>());
+            if (formula[i] == '(') {
+                st.push({"(", 0});
                 i++;
-            } else if (c == ')') {
-                map<string, int> top = stack.top();
-                stack.pop();
+            } else if (formula[i] == ')') {
                 i++;
-                //Creating countString after closing racket
-                string countStr;
-                while (i < n && formula[i]>='0' && formula[i]<='9') {
-                    countStr += formula[i];
+                int count = 0;
+                while (i < n && isDigit(formula[i])) {
+                    count = count * 10 + (formula[i] - '0');
                     i++;
                 }
-                int count = countStr.empty() ? 1 : stoi(countStr);
-                map<string, int>& current = stack.top();
-                for (auto& pair : top) {
-                    current[pair.first] += pair.second * count;
+                count = (count == 0) ? 1 : count;
+                stack<pair<string, int>> tempStack;
+                while (!st.empty() && st.top().first != "(") {
+                    auto top = st.top();
+                    st.pop();
+                    top.second *= count;
+                    tempStack.push(top);
+                }
+                st.pop();  // remove '('
+                while (!tempStack.empty()) {
+                    st.push(tempStack.top());
+                    tempStack.pop();
                 }
             } else {
-                int stringbeg = i;
-                i++;
-                while (i < n && formula[i]>='a' && formula[i]<='z') {
+                string atom;
+                atom += formula[i++];
+                if (i < n && formula[i] >= 'a' && formula[i] <= 'z') {
+                    atom += formula[i++];
+                }
+                int count = 0;
+                while (i < n && isDigit(formula[i])) {
+                    count = count * 10 + (formula[i] - '0');
                     i++;
                 }
-                string atom = formula.substr(stringbeg, i - stringbeg);
-                string countStr;
-                while (i < n && formula[i]>='0' && formula[i]<='9') {
-                    countStr += formula[i];
-                    i++;
-                }
-                int count = countStr.empty() ? 1 : stoi(countStr);
-                map<string, int>& current = stack.top();
-                current[atom] += count;
+                count = (count == 0) ? 1 : count;
+                st.push({atom, count});
             }
         }
 
-        map<string, int> finalAns = stack.top();
-        stack.pop();
-        string  ans;;
-        for (auto& pair : finalAns) {
-            ans+=pair.first;
+        while (!st.empty()) {
+            auto top = st.top();
+            st.pop();
+            atomCount[top.first] += top.second;
+        }
+
+        string result;
+        for (const auto &pair : atomCount) {
+            result += pair.first;
             if (pair.second > 1) {
-                ans+= to_string(pair.second);
+                result += to_string(pair.second);
             }
         }
-        return ans;
+
+        return result;
     }
 };
