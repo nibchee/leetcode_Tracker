@@ -22,14 +22,14 @@ public:
             TreeNode* parent = NULL;
             TreeNode* child = NULL;
 
-            if (nodes.find(p) != nodes.end()) {
+            if (nodes[p]!=0) {
                 parent = nodes[p];
             } else {
                 parent = new TreeNode(p);
                 nodes[p] = parent;
             }
 
-            if (nodes.find(c) != nodes.end()) {
+            if (nodes[c]!=0) {
                 child = nodes[c];
             } else {
                 child = new TreeNode(c);
