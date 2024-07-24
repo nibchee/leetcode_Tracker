@@ -21,7 +21,7 @@ public:
         return  num;
     }
     vector<int> sortJumbled(vector<int>& mapping, vector<int>& nums) {
-        map<int,vector<int>>m;
+        unordered_map<int,vector<int>>m;
         for(int i=0;i<nums.size();i++){
             int num=solve(nums[i],mapping);
             m[num].push_back(nums[i]);
