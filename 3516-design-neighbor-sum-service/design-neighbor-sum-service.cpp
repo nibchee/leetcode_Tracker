@@ -4,9 +4,9 @@ public:
     vector<vector<int>> grid;
     int n;
 
-    neighborSum(vector<vector<int>> &inputGrid) {
-        grid = inputGrid;
-        n = inputGrid.size();
+    neighborSum(vector<vector<int>> &grid) {
+        this->grid = grid;
+        n = grid.size();
     }
 
     int adjacentSum(int value) {
