@@ -1,49 +1,33 @@
 class Solution {
 public:
     int myAtoi(string s) {
-
-        const int len = s.size();
-
-        if (len == 0) {
-            return 0;
+        int i = 0;
+        int flag = 1; 
+        
+        while (i < s.size() && s[i] == ' ') {
+            i++;
         }
-        int index = 0;
-
-        while (index < len && s[index] == ' ') {
-            ++index;
+        
+        if (i < s.size() && s[i] == '-') {
+            flag = -1;
+            i++;
+        } else if (i < s.size() && s[i] == '+') {
+            i++;
         }
-
-        bool isNegative = false;
-
-        if (index < len) {
-
-            if (s[index] == '-') {
-                isNegative = true;
-                ++index;
-            } else if (s[index] == '+') {
-                ++index;
+        
+        int n = 0;
+        
+        while (i < s.size() && isdigit(s[i])) {
+            int digit = s[i] - '0';
+            
+            if (n > (INT_MAX - digit) / 10) {
+                return flag == -1 ? INT_MIN : INT_MAX;
             }
+            
+            n = n * 10 + digit;
+            i++;
         }
-
-        int result = 0;
-
-        while (index < len && isDigit(s[index])) {
-
-            int digit = s[index] - '0';
-
-            if (result > (INT_MAX / 10) ||
-                (result == (INT_MAX / 10) && digit > 7)) {
-                return isNegative ? INT_MIN : INT_MAX;
-            }
-
-            result = (result * 10) + digit;
-
-            ++index;
-        }
-
-        return isNegative ? -result : result;
+        
+        return flag * n;
     }
-
-private:
-    bool isDigit(char ch) { return ch >= '0' && ch <= '9'; }
 };
