@@ -2,36 +2,31 @@ class Solution {
 public:
     int myAtoi(string s) {
         int i = 0;
-        int flag = 1;  // Initialize flag to 1 for positive numbers
-        
-        // Skip leading whitespace
-        while (i < s.size() && s[i] == ' ') {
+        int flag = 0;
+        while (s[i] == ' ') {
             i++;
         }
-        
-        // Check for sign
-        if (i < s.size() && s[i] == '-') {
+        if (s[i] == '-') {
             flag = -1;
             i++;
-        } else if (i < s.size() && s[i] == '+') {
+        } else if (s[i] == '+') {
+            flag = 1;
             i++;
         }
-        
         int n = 0;
-        
-        // Convert digits to number
-        while (i < s.size() && isdigit(s[i])) {
-            int digit = s[i] - '0';
-            
-            // Check for overflow before multiplying and adding
-            if (n > (INT_MAX - digit) / 10) {
-                return flag == -1 ? INT_MIN : INT_MAX;
+        for (int j = i; j < s.size(); j++) {
+            if (isdigit(s[j])) {
+                int digit = s[j] - '0';
+                if (n > ((INT_MAX - digit) / 10) ||
+                    (n == (INT_MAX / 10) && digit > 7)) {
+                    return flag == -1 ? INT_MIN : INT_MAX;
+                }
+                n = n * 10 + digit;
+
+            } else {
+                break;
             }
-            
-            n = n * 10 + digit;
-            i++;
         }
-        
-        return flag * n;
+        return flag == -1 ? flag * n : n;
     }
 };
