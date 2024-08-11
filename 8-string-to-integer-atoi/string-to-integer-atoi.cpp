@@ -25,7 +25,7 @@ public:
                 return flag == -1 ? INT_MIN : INT_MAX;
             }
 
-            n = n * 10 + digit;
+            n = n * 10 + (s[i]-'0');
             i++;
         }
 
