@@ -1,27 +1,32 @@
 class Solution {
 
     public boolean canSortArray(int[] nums) {
-        int[] values = Arrays.copyOf(nums, nums.length);
+        int numOfSetBits = Integer.bitCount(nums[0]);
+        int maxOfSegment = nums[0];
+        int minOfSegment = nums[0];
 
-        int n = values.length;
+        int maxOfPrevSegment = Integer.MIN_VALUE;
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n - i - 1; j++) {
-                if (values[j] <= values[j + 1]) {
-                    continue;
-                } else {
-                    if (
-                        Integer.bitCount(values[j]) ==
-                        Integer.bitCount(values[j + 1])
-                    ) {
-                        int temp = values[j];
-                        values[j] = values[j + 1];
-                        values[j + 1] = temp;
-                    } else {
-                        return false;
-                    }
+        for (int i = 1; i < nums.length; i++) {
+            if (Integer.bitCount(nums[i]) == numOfSetBits) {
+                maxOfSegment = Math.max(maxOfSegment, nums[i]);
+                minOfSegment = Math.min(minOfSegment, nums[i]);
+            } else { 
+                
+                if (minOfSegment < maxOfPrevSegment) {
+                    return false;
                 }
+
+                maxOfPrevSegment = maxOfSegment;
+
+                maxOfSegment = nums[i];
+                minOfSegment = nums[i];
+                numOfSetBits = Integer.bitCount(nums[i]);
             }
+        }
+       
+        if (minOfSegment < maxOfPrevSegment) {
+            return false;
         }
         return true;
     }
