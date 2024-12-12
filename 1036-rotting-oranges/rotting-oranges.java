@@ -1,66 +1,72 @@
 class Solution {
+    int unrotten = 0;
 
-    private boolean isSafe(int i,int j,int r,int c){
-        return (i>=0 && j>=0  && i<r && j<c);
-    }
     public int orangesRotting(int[][] grid) {
-        int m=grid.length;
-        int n=grid[0].length;
-
-        Queue<int[]> q=new LinkedList<>();
-        int freshOrange=0;
-
-        for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++){
-                if(grid[i][j]==2){
-                    q.add(new int[]{i,j});
-                  }
-                     if(grid[i][j]==1)
-                    freshOrange++;
-               
+           int rotten = 0;
+ 
+        int m = grid.length;
+        int n = grid[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1)
+                    unrotten++;
+                if (grid[i][j] == 2)
+                    rotten++;
             }
         }
-        if(freshOrange==0)return 0;
-        if(q.isEmpty())return -1;
+        if (unrotten>0 && rotten==0)
+            return -1;
 
-        int min=0;
-        while(!q.isEmpty()){
-            int size=q.size();
-            for(int i=0;i<size;i++){
-                int []cell=q.remove();
-                int x=cell[0];
-                int y=cell[1];
-                //up
-                if(isSafe(x-1,y,m,n) && grid[x-1][y]==1){
-                    grid[x-1][y]=2;
-                    q.add(new int[]{x-1,y});
-                    freshOrange--;
-                }
-                //down
-                if(isSafe(x+1,y,m,n) && grid[x+1][y]==1){
-                    grid[x+1][y]=2;
-                    q.add(new int[]{x+1,y});
-                    freshOrange--;
-                }
-                //left
-                if(isSafe(x,y-1,m,n) && grid[x][y-1]==1){
-                    grid[x][y-1]=2;
-                    q.add(new int[]{x,y-1});
-                    freshOrange--;
-                }
-                //right
-                if(isSafe(x,y+1,m,n) && grid[x][y+1]==1){
-                    grid[x][y+1]=2;
-                    q.add(new int[]{x,y+1});
-                    freshOrange--;
+            if(unrotten==0)
+            return 0;
+
+        int ans = 0;
+        int rot_mark = 3;
+        while (true) {
+            int rotten2=rott(grid, rot_mark,rotten);
+            if (unrotten == 0) {
+                return ans + 1;
+            }
+            if (rotten2 == rotten) {
+                return -1;
+            }
+            ans++;
+            rot_mark++;
+            rotten=rotten2;
+        }
+    }
+
+    private int rott(int[][]grid,int mark,int rotten){
+        for(int i=0;i<grid.length;i++){
+            for(int j=0;j<grid[i].length;j++){
+                if(grid[i][j]!=0 && grid[i][j]!=1 && grid[i][j]!=mark){
+                    if(i-1>=0 && grid[i-1][j]==1){
+                        grid[i-1][j]=mark;
+                        rotten++;
+                        unrotten--;
+                    }
+                       if(i+1<grid.length && grid[i+1][j]==1){
+                        grid[i+1][j]=mark;
+                        rotten++;
+                        unrotten--;
+                    }
+
+                    
+                       if(j+1<grid[i].length && grid[i][j+1]==1){
+                        grid[i][j+1]=mark;
+                        rotten++;
+                        unrotten--;
+                    }
+
+                    
+                       if(j-1>=0 && grid[i][j-1]==1){
+                        grid[i][j-1]=mark;
+                        rotten++;
+                        unrotten--;
+                    }
                 }
             }
-            min++;
         }
-
-        if(freshOrange==0)
-        return min-1;
-
-    return -1;
+        return rotten;
     }
 }
