@@ -14,7 +14,7 @@ class Solution {
             maxHeap.offer(ch);
         }
 
-        StringBuilder result = new StringBuilder();
+        StringBuilder ans = new StringBuilder();
 
         while (!maxHeap.isEmpty()) {
             char ch = maxHeap.poll();
@@ -22,14 +22,14 @@ class Solution {
 
             int use = Math.min(count, repeatLimit);
             for (int i = 0; i < use; i++) {
-                result.append(ch);
+                ans.append(ch);
             }
 
             freq.put(ch, count - use);
 
             if (freq.get(ch) > 0 && !maxHeap.isEmpty()) {
                 char nextCh = maxHeap.poll();
-                result.append(nextCh);
+                ans.append(nextCh);
                 freq.put(nextCh, freq.get(nextCh) - 1);
                 if (freq.get(nextCh) > 0) {
                     maxHeap.offer(nextCh);
@@ -38,6 +38,6 @@ class Solution {
             }
         }
 
-        return result.toString();
+        return ans.toString();
     }
 }
