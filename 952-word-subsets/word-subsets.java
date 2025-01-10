@@ -8,12 +8,14 @@ class Solution {
         }
 
         List<String> ans = new ArrayList();
-        search: for (String a: A) {
+         for (String a: A) {
             int[] aCount = count(a);
-            for (int i = 0; i < 26; ++i)
+            int i=0;
+            for (i = 0; i < 26; ++i)
                 if (aCount[i] < bmax[i])
-                    continue search;
-            ans.add(a);
+                    break;
+                    if(i==26)
+                  ans.add(a);
         }
 
         return ans;
