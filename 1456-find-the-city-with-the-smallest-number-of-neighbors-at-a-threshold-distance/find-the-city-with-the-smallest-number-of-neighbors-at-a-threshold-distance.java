@@ -1,111 +1,70 @@
 class Solution {
-
     public int findTheCity(int n, int[][] edges, int distanceThreshold) {
-        // Adjacency list to store the graph
-        List<int[]>[] adjacencyList = new List[n];
-        // Matrix to store shortest path distances from each city
-        int[][] shortestPathMatrix = new int[n][n];
+       //Array of List
+       List<int[]>[] adjList=new List[n];
+       int[][] shortestPaths=new int[n][n];
 
-        // Initialize adjacency list and shortest path matrix
-        for (int i = 0; i < n; i++) {
-            Arrays.fill(shortestPathMatrix[i], Integer.MAX_VALUE); // Set all distances to infinity
-            shortestPathMatrix[i][i] = 0; // Distance to itself is zero
-            adjacencyList[i] = new ArrayList<>();
-        }
+       for(int i=0;i<n;i++){
+        Arrays.fill(shortestPaths[i],Integer.MAX_VALUE);
+        shortestPaths[i][i]=0;
+        adjList[i]=new ArrayList<>();
+       } 
 
-        // Populate the adjacency list with edges
-        for (int[] edge : edges) {
-            int start = edge[0];
-            int end = edge[1];
-            int weight = edge[2];
-            adjacencyList[start].add(new int[] { end, weight });
-            adjacencyList[end].add(new int[] { start, weight }); // For undirected graph
-        }
 
-        // Compute shortest paths from each city using Dijkstra's algorithm
-        for (int i = 0; i < n; i++) {
-            dijkstra(n, adjacencyList, shortestPathMatrix[i], i);
-        }
+       for(int[]edge:edges){
+        int s=edge[0];
+        int e=edge[1];
+        int wt=edge[2];
+        adjList[s].add(new int[]{e,wt});
+        adjList[e].add(new int[]{s,wt});
+       }
 
-        // Find the city with the fewest number of reachable cities within the distance threshold
-        return getCityWithFewestReachable(
-            n,
-            shortestPathMatrix,
-            distanceThreshold
-        );
+       for(int i=0;i<n;i++){
+        dijkastra(n,adjList,shortestPaths[i],i);
+       }
+
+       return getCity(n,shortestPaths,distanceThreshold);
     }
 
-    // Dijkstra's algorithm to find shortest paths from a source city
-    void dijkstra(
-        int n,
-        List<int[]>[] adjacencyList,
-        int[] shortestPathDistances,
-        int source
-    ) {
-        // Priority queue to process nodes with the smallest distance first
-        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>((a, b) ->
-            (a[1] - b[1])
-        );
-        priorityQueue.add(new int[] { source, 0 });
-        Arrays.fill(shortestPathDistances, Integer.MAX_VALUE); // Set all distances to infinity
-        shortestPathDistances[source] = 0; // Distance to source itself is zero
+    void dijkastra(int n,List<int[]>[] adjList,int []shortestPath,int src){
+        PriorityQueue<int[]>q=new PriorityQueue<>((a,b)->(a[1]-b[1]));
+        q.add(new int[]{src,0});
+        while(!q.isEmpty()){
+            int[] cur=q.remove();
+            int currCity=cur[0];
+            int curDist=cur[1];
+            if(curDist>shortestPath[currCity]) continue;
 
-        // Process nodes in priority order
-        while (!priorityQueue.isEmpty()) {
-            int[] current = priorityQueue.remove();
-            int currentCity = current[0];
-            int currentDistance = current[1];
-            if (currentDistance > shortestPathDistances[currentCity]) {
-                continue;
-            }
-
-            // Update distances to neighboring cities
-            for (int[] neighbor : adjacencyList[currentCity]) {
-                int neighborCity = neighbor[0];
-                int edgeWeight = neighbor[1];
-                if (
-                    shortestPathDistances[neighborCity] >
-                    currentDistance + edgeWeight
-                ) {
-                    shortestPathDistances[neighborCity] = currentDistance +
-                    edgeWeight;
-                    priorityQueue.add(
-                        new int[] {
-                            neighborCity,
-                            shortestPathDistances[neighborCity],
-                        }
-                    );
+            for(int[] neighbour :adjList[currCity]){
+                int nbh=neighbour[0];
+                int wt=neighbour[1];
+                if(shortestPath[nbh]>(curDist+wt)){
+                    shortestPath[nbh]=curDist+wt;
+                    q.add(new int[]{nbh,shortestPath[nbh]});
                 }
             }
         }
     }
 
-    // Determine the city with the fewest number of reachable cities within the distance threshold
-    int getCityWithFewestReachable(
-        int n,
-        int[][] shortestPathMatrix,
-        int distanceThreshold
-    ) {
-        int cityWithFewestReachable = -1;
-        int fewestReachableCount = n;
+   int getCity(int n,int[][] shortPath,int threshold){
+    int ans=-1;
+    int fewCount=n;
 
-        // Count number of cities reachable within the distance threshold for each city
-        for (int i = 0; i < n; i++) {
-            int reachableCount = 0;
-            for (int j = 0; j < n; j++) {
-                if (i == j) {
-                    continue;
-                } // Skip self
-                if (shortestPathMatrix[i][j] <= distanceThreshold) {
-                    reachableCount++;
-                }
-            }
-            // Update the city with the fewest reachable cities
-            if (reachableCount <= fewestReachableCount) {
-                fewestReachableCount = reachableCount;
-                cityWithFewestReachable = i;
-            }
+    for(int i=0;i<n;i++){
+        int c=0;
+        for(int j=0;j<n;j++){
+            if(i==j) continue;
+            if(shortPath[i][j]<=threshold)
+            c++;
         }
-        return cityWithFewestReachable;
+
+        if(c<=fewCount){
+            fewCount=c;
+            ans=i;
+        }
     }
+   return ans;
+   }
+
+
 }
