@@ -1,29 +1,35 @@
 class Solution {
+   // int INF=(int)1e9+7;
     public int findTheCity(int n, int[][] edges, int distanceThreshold) {
        //Array of List
-       List<int[]>[] adjList=new List[n];
        int[][] shortestPaths=new int[n][n];
 
-       for(int i=0;i<n;i++){
-        Arrays.fill(shortestPaths[i],Integer.MAX_VALUE);
-        shortestPaths[i][i]=0;
-        adjList[i]=new ArrayList<>();
-       } 
-
-
-       for(int[]edge:edges){
-        int s=edge[0];
-        int e=edge[1];
-        int wt=edge[2];
-        adjList[s].add(new int[]{e,wt});
-        adjList[e].add(new int[]{s,wt});
-       }
 
        for(int i=0;i<n;i++){
-        dijkastra(n,adjList,shortestPaths[i],i);
+        bellman(n,edges,shortestPaths[i],i);
        }
 
        return getCity(n,shortestPaths,distanceThreshold);
+    }
+
+    void bellman(int n,int[][]edges,int[] shortestPath,int src){
+        Arrays.fill(shortestPath,Integer.MAX_VALUE);
+        shortestPath[src]=0;
+
+        for(int i=1;i<n;i++){
+    //relaxing edges n-1 times
+    for(int[] edge:edges){
+        int s=edge[0];
+        int e=edge[1];
+        int wt=edge[2];
+        if(shortestPath[s]!=Integer.MAX_VALUE && shortestPath[s]+wt<shortestPath[e]){
+        shortestPath[e]=shortestPath[s]+wt;
+        } 
+        if(shortestPath[e]!=Integer.MAX_VALUE && shortestPath[e]+wt<shortestPath[s]){
+        shortestPath[s]=shortestPath[e]+wt;
+        }
+    }
+    }
     }
 
     void dijkastra(int n,List<int[]>[] adjList,int []shortestPath,int src){
