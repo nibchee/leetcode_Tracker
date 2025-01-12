@@ -1,28 +1,30 @@
 class Solution {
     public int stoneGameVI(int[] aliceValues, int[] bobValues) {
+        int n = aliceValues.length;
         
-        int totalStones=aliceValues.length;
-        int aliceScore=0;
-        int bobScore=0;
-
-        PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->{
-            return (b[0]+b[1])-(a[0]+a[1]);
-        });
-            
-        for(int i=0;i<totalStones;i++){
-            pq.add(new int[]{aliceValues[i],bobValues[i]});
+        int[][] stoneValues = new int[n][3];
+        
+        for(int i = 0; i < n; i++){
+            stoneValues[i] = new int[]{aliceValues[i], bobValues[i],  (aliceValues[i] + bobValues[i])};
         }
-       
-
-       while(!pq.isEmpty()){
-           if(!pq.isEmpty())
-           aliceScore+=pq.remove()[0];
-           if(!pq.isEmpty())
-           bobScore+=pq.remove()[1];
-       }
-     if(aliceScore>bobScore) return 1;
-     if(aliceScore<bobScore) return -1;
-     return 0;
-     
+        
+        Arrays.sort(stoneValues, (a, b) -> (b[2] - a[2]));
+        
+        int aliceScore = 0;
+        
+        for(int i = 0; i < n; i++){
+            
+            if(i % 2 == 0){
+                aliceScore += stoneValues[i][0];
+            }else{
+                aliceScore -= stoneValues[i][1];
+            }
+        }
+        
+        if(aliceScore > 0) return 1;
+        if(aliceScore < 0) return -1;
+        
+        return 0;
     }
+    
 }
