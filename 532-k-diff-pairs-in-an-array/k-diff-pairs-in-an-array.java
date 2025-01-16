@@ -1,46 +1,21 @@
 class Solution {
     public int findPairs(int[] nums, int k) {
-        HashMap<Integer,HashSet<Integer>> pairs=new HashMap<>();
-
-        for(int num:nums){
-           int num_plusK=num+k;
-           int num_minusK=num-k;
-          HashSet<Integer> s=pairs.get(num);
-               
-           if(pairs.containsKey(num_plusK)){
-               if(pairs.get(num_plusK)==null || !pairs.get(num_plusK).contains(num)){
-               if(s==null){
-                s=new HashSet<>();
-               }
-               s.add(num_plusK);
-               //System.out.println("Set"+s.toString());
-               pairs.put(num,s);
-               }
-           }
-
-           if(pairs.containsKey(num_minusK)){
-            if(pairs.get(num_minusK)==null || !pairs.get(num_minusK).contains(num)){
-               if(s==null){
-                s=new HashSet<>();
-               }
-              s.add(num_minusK);
-               pairs.put(num,s);
+        Arrays.sort(nums);
+        int l=0,r=1;
+        int ans=0;
+        int n=nums.length;
+        while(l<n && r<n){
+            if(l==r || nums[r]-nums[l]<k){
+                r++;
+            }else if(nums[r]-nums[l]>k){
+                l++;
+            }else{
+                //equal
+                l++;
+                ans++;
+                while(l<n && nums[l]==nums[l-1])
+                l++;
             }
-           }
-
-           if(s==null)
-           pairs.put(num,null);
-           //System.out.println(num+" "+pairs.get(num));
-//System.out.println("-------------------------------");
-        }
-        //System.out.println(pairs.size());
-       int ans=0;
-        for(Map.Entry<Integer,HashSet<Integer>> entry: pairs.entrySet()){
-           HashSet<Integer> set=entry.getValue();
-           //System.out.println(entry.getKey()+" "+entry.getValue());
-           if(set!=null){
-            ans+=set.size();
-           }
         }
         return ans;
     }
