@@ -1,26 +1,29 @@
 class Solution {
     public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
-        LinkedList<int[]> intersections=new LinkedList<>();
+        int i=0,j=0;
+        int m=firstList.length;
+        int n=secondList.length;
+        ArrayList<int[]> ans=new ArrayList<>();
 
-        int A=0,B=0;
-        while(A<firstList.length && B<secondList.length){
-            int mS=Math.max(firstList[A][0],secondList[B][0]);
-            int mE=Math.min(firstList[A][1],secondList[B][1]);
-           //checking if overlapped
-           //let A-[1,3]  B[4,6]  then ms-4  mE=[3] [4,3] is not an intersection
-            if(mS<=mE)
-            intersections.add(new int[]{mS,mE});
-
-            //incrementing Pointers , with which is less,
-            //NOTE: not correct way
-            //if(firstList[A][1]<=secondList[B][1])A++;
-            //if(firstList[A][1]>=secondList[B][1])B++;
-          
-            //correct way
-            if(firstList[A][1]<=mE)A++;
-            if(mE>=secondList[B][1])B++;
+    while(i<m && j<n){
+        int s=Math.max(firstList[i][0],secondList[j][0]);
+        int e=Math.min(firstList[i][1],secondList[j][1]);
+            if(s<=e){
+                ans.add(new int[]{s,e});
+            }
+            
+                if(firstList[i][1]<secondList[j][1])
+                i++;
+                else
+                j++;
+            }
         
-        } 
-        return intersections.toArray(new int[intersections.size()][2]);
+   int [][]finalAns=new int[ans.size()][2];
+   for(int z=0;z<ans.size();z++){
+     finalAns[z]=ans.get(z);
+   }
+   return finalAns;
     }
+
+
 }
