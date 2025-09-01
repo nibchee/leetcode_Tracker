@@ -1,33 +1,37 @@
-import java.util.PriorityQueue;
 
 class Solution {
     public double maxAverageRatio(int[][] classes, int extraStudents) {
-        // PriorityQueue to store classes based on their pass ratio improvement
-        PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> 
-            Double.compare((double)(b[0] + 1) / (b[1] + 1) - (double)(b[0]) / b[1], 
-                           (double)(a[0] + 1) / (a[1] + 1) - (double)(a[0]) / a[1]));
+        PriorityQueue<double[]> pq = new PriorityQueue<>(new Comparator<double[]>() {
+            public int compare(double[] a, double[] b) {
+                if (a[0] < b[0]) return 1;
+                if (a[0] > b[0]) return -1;
+                return 0;
+            }
+        });
 
-        // Add all classes to the heap
-        for (int[] currentClass : classes) {
-            heap.add(currentClass);
+        for (int i = 0; i < classes.length; i++) {
+            double pass = classes[i][0];
+            double total = classes[i][1];
+            double inc = (pass + 1.0) / (total + 1.0) - pass / total;
+            pq.offer(new double[]{inc, pass, total});
         }
 
-        // Allocate extra students to improve the pass ratio
         while (extraStudents > 0) {
-            int[] highPassRatioClass = heap.remove();
-            highPassRatioClass[0] += 1;
-            highPassRatioClass[1] += 1;
-            heap.add(highPassRatioClass);
+            double[] top = pq.poll();
+            double pass = top[1] + 1;
+            double total = top[2] + 1;
+            double inc = (pass + 1.0) / (total + 1.0) - pass / total;
+            pq.offer(new double[]{inc, pass, total});
             extraStudents--;
         }
 
-        // Calculate the total average pass ratio
-        double ans = 0;
-        while (!heap.isEmpty()) {
-            int[] currentClass = heap.remove();
-            ans += (double) currentClass[0] / currentClass[1];
+        double sum = 0.0;
+        Object[] arr = pq.toArray();
+        for (int i = 0; i < arr.length; i++) {
+            double[] c = (double[]) arr[i];
+            sum += c[1] / c[2];
         }
-        
-        return ans / classes.length;
+
+        return sum / classes.length;
     }
 }
