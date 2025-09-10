@@ -1,30 +1,25 @@
 class Solution {
-
-    private static final int MOD = 1000000007;
-
+    long c=1_000_000_007;
     public int peopleAwareOfSecret(int n, int delay, int forget) {
-        Deque<int[]> know = new LinkedList<>();
-        Deque<int[]> share = new LinkedList<>();
-        know.add(new int[] { 1, 1 });
-        int knowCnt = 1;
-        int shareCnt = 0;
-
-        for (int i = 2; i <= n; i++) {
-            if (!know.isEmpty() && know.peekFirst()[0] == i - delay) {
-                int[] first = know.pollFirst();
-                knowCnt = (knowCnt - first[1] + MOD) % MOD;
-                shareCnt = (shareCnt + first[1]) % MOD;
-                share.add(first);
+        long ans=0l;
+        long a[][]=new long[n][forget];
+        a[0][0]=1;
+        for(int i=1;i<n;i++){
+            long sum=0l;
+            for(int j=forget-1;j>=1;j--){
+                a[i][j]=a[i-1][j-1];
+                if(j>=delay){
+                    sum+=a[i][j];
+                    sum=sum%c;
+                }
             }
-            if (!share.isEmpty() && share.peekFirst()[0] == i - forget) {
-                int[] first = share.pollFirst();
-                shareCnt = (shareCnt - first[1] + MOD) % MOD;
-            }
-            if (!share.isEmpty()) {
-                knowCnt = (knowCnt + shareCnt) % MOD;
-                know.add(new int[] { i, shareCnt });
-            }
+            a[i][0]=sum%c;
         }
-        return (knowCnt + shareCnt) % MOD;
+
+        for(int i=0;i<forget;i++){
+            ans+=a[n-1][i];
+            ans=ans%c;
+        }
+    return (int)ans;
     }
 }
