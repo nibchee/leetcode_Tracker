@@ -5,8 +5,30 @@ class Solution {
     private static final int GUARD = 2;
     private static final int WALL = 3;
 
+    public void markguarded(int row, int col, int[][] grid) {
+        // Traverse upwards
+        for (int r = row - 1; r >= 0; r--) {
+            if (grid[r][col] == WALL || grid[r][col] == GUARD) break;
+            grid[r][col] = GUARDED;
+        }
+        // Traverse downwards
+        for (int r = row + 1; r < grid.length; r++) {
+            if (grid[r][col] == WALL || grid[r][col] == GUARD) break;
+            grid[r][col] = GUARDED;
+        }
+        // Traverse leftwards
+        for (int c = col - 1; c >= 0; c--) {
+            if (grid[row][c] == WALL || grid[row][c] == GUARD) break;
+            grid[row][c] = GUARDED;
+        }
+        // Traverse rightwards
+        for (int c = col + 1; c < grid[0].length; c++) {
+            if (grid[row][c] == WALL || grid[row][c] == GUARD) break;
+            grid[row][c] = GUARDED;
+        }
+    }
+
     public int countUnguarded(int m, int n, int[][] guards, int[][] walls) {
-        // Create and initialize grid
         int[][] grid = new int[m][n];
 
         // Mark guards' positions
@@ -19,91 +41,18 @@ class Solution {
             grid[wall[0]][wall[1]] = WALL;
         }
 
-        // Horizontal passes
-        for (int row = 0; row < m; row++) {
-            // Left to right pass
-            boolean isGuardLineActive = grid[row][0] == GUARD;
-            for (int col = 1; col < n; col++) {
-                isGuardLineActive = updateCellVisibility(
-                    grid,
-                    row,
-                    col,
-                    isGuardLineActive
-                );
-            }
-
-            // Right to left pass
-            isGuardLineActive = grid[row][n - 1] == GUARD;
-            for (int col = n - 2; col >= 0; col--) {
-                isGuardLineActive = updateCellVisibility(
-                    grid,
-                    row,
-                    col,
-                    isGuardLineActive
-                );
-            }
-        }
-
-        // Vertical passes
-        for (int col = 0; col < n; col++) {
-            // Top to bottom pass
-            boolean isGuardLineActive = grid[0][col] == GUARD;
-            for (int row = 1; row < m; row++) {
-                isGuardLineActive = updateCellVisibility(
-                    grid,
-                    row,
-                    col,
-                    isGuardLineActive
-                );
-            }
-
-            // Bottom to top pass
-            isGuardLineActive = grid[m - 1][col] == GUARD;
-            for (int row = m - 2; row >= 0; row--) {
-                isGuardLineActive = updateCellVisibility(
-                    grid,
-                    row,
-                    col,
-                    isGuardLineActive
-                );
-            }
+        // Mark cells as guarded by traversing from each guard
+        for (int[] guard : guards) {
+            markguarded(guard[0], guard[1], grid);
         }
 
         // Count unguarded cells
         int count = 0;
-        for (int row = 0; row < m; row++) {
-            for (int col = 0; col < n; col++) {
-                if (grid[row][col] == UNGUARDED) {
-                    count++;
-                }
+        for (int[] row : grid) {
+            for (int cell : row) {
+                if (cell == UNGUARDED) count++;
             }
         }
-
         return count;
-    }
-
-    // Helper method to update cell visibility
-    private boolean updateCellVisibility(
-        int[][] grid,
-        int row,
-        int col,
-        boolean isGuardLineActive
-    ) {
-        // If current cell is a guard, reactivate the guard line
-        if (grid[row][col] == GUARD) {
-            return true;
-        }
-
-        // If current cell is a wall, deactivate the guard line
-        if (grid[row][col] == WALL) {
-            return false;
-        }
-
-        // If guard line is active, mark cell as guarded
-        if (isGuardLineActive) {
-            grid[row][col] = GUARDED;
-        }
-
-        return isGuardLineActive;
     }
 }
