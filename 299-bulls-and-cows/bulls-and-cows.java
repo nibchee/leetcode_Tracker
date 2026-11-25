@@ -21,7 +21,7 @@ class Solution {
         //cows
         for(int i=0;i<nonMatch.length();i++){
             char ch=nonMatch.charAt(i);
-            System.out.println(ch+" "+freq.containsKey(ch));
+            //System.out.println(ch+" "+freq.containsKey(ch));
             if(freq.containsKey(ch)){
                 cows++;
                 freq.put(ch,freq.get(ch)-1);
