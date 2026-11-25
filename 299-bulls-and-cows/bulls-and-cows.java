@@ -1,32 +1,34 @@
 class Solution {
     public String getHint(String secret, String guess) {
-       HashMap<Character,Integer> map=new HashMap<>();
-      int cows=0;
-      int bulls=0;
-    
-       for(int i=0;i<secret.length();i++){
-        char ch=secret.charAt(i);
-        if(ch==guess.charAt(i))
-        bulls++;
-        else{
-            map.put(ch,map.getOrDefault(ch,0)+1);
+        HashMap<Character,Integer> freq=new HashMap<>();
+        int n=secret.length();
+        int bulls=0;
+        int cows=0;
+        String nonMatch="";
+        //bulls
+        for(int i=0;i<n;i++){
+            char c1=secret.charAt(i);
+            char c2=guess.charAt(i);
+            //System.out.println(c1+" "+c2+" "+(c1==c2));
+            if(c1==c2){
+            bulls++;
+            }
+            else{
+                nonMatch+=c2;
+                freq.put(c1,freq.getOrDefault(c1,0)+1);
+            }
         }
-       }
-        
-       for(int i=0;i<guess.length();i++){
-        char ch=guess.charAt(i);
-        if(secret.charAt(i)==ch)
-        continue;
-        if(map.containsKey(ch) && map.get(ch)>0){
-            cows++;
-            if(map.get(ch)-1==0){
-                map.remove(ch);
-            }else{
-                map.put(ch,map.get(ch)-1);
+        //cows
+        for(int i=0;i<nonMatch.length();i++){
+            char ch=nonMatch.charAt(i);
+            System.out.println(ch+" "+freq.containsKey(ch));
+            if(freq.containsKey(ch)){
+                cows++;
+                freq.put(ch,freq.get(ch)-1);
+                if(freq.get(ch)==0) freq.remove(ch);
             }
         }
         
-       }
        return Integer.toString(bulls)+'A'+Integer.toString(cows)+'B';
     }
 }
